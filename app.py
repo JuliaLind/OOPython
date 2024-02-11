@@ -15,6 +15,12 @@ from src.trie import Trie
 app = Flask(__name__)
 app.secret_key = re.sub(r"[^a-z\d]", "", os.path.realpath(__file__))
 
+def recreateTrie():
+    trie = Trie.create_from_file(session.get("filename"))
+    for word in session["removed_words"]:
+        trie.remove(word)
+    return trie
+
 @app.route("/", methods=["GET"])
 def main():
     """
@@ -49,9 +55,8 @@ def check_word_():
     Route for checking if word is in trie
     """
     the_word = request.form.get("word")
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     if the_word in trie:
         session["flashmessage"] = ("alert alert-success",
@@ -69,9 +74,7 @@ def list_words():
     Lists all words
     """
 
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+    trie = recreateTrie()
 
     return render_template("list_words.html", trie=trie)
 
@@ -91,9 +94,8 @@ def remove_word_():
     Rote for removing a word
     """
     the_word = request.form.get("word")
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     try:
         trie.remove(the_word)
@@ -111,9 +113,8 @@ def prefix_search():
     """
     Route for finding all words that start with a prefix
     """
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     prefix = session["word"]
     session["word"] = ""
@@ -130,9 +131,7 @@ def prefix_search_():
     """
     session["word"]  = request.form.get("word")
 
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+    trie = recreateTrie()
 
     if not session["word"] or not trie.prefix_search(session["word"]):
         session["flashmessage"] = ("alert alert-warning",
@@ -152,9 +151,8 @@ def suffix_search():
     session["flashmessage"] = ("", "")
     suffix = session["word"]
     session["word"] = ""
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     return render_template("suffix_search.html", flashmessage=message, suffix=suffix, trie=trie)
 
@@ -165,9 +163,8 @@ def suffix_search_():
     Route for finding words that end with suffix
     """
     session["word"] = request.form.get("word")
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     if not session["word"] or not trie.suffix_search(session["word"]):
         session["flashmessage"] = ("alert alert-warning",
@@ -181,9 +178,8 @@ def correct_spelling():
     """
     Route for checking if a word is spelled correctly
     """
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     word = session.get("word")
     session["word"] = ""
@@ -198,9 +194,8 @@ def correct_spelling_():
     """
     Route for checking if a word is spelled correctly
     """
-    trie = Trie.create_from_file(session.get("filename"))
-    for word in session["removed_words"]:
-        trie.remove(word)
+
+    trie = recreateTrie()
 
     session["word"] = request.form.get("word")
 
