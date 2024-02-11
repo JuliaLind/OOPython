@@ -58,12 +58,22 @@ def check_word_():
 
     trie = recreateTrie()
 
+    msg_type = "danger"
+    neg = "not "
+
     if the_word in trie:
-        session["flashmessage"] = ("alert alert-success",
-        f"The word '{the_word}' is spelled correctly.")
-    else:
-        session["flashmessage"] = ("alert alert-danger",
-        f"The word '{the_word}' is not spelled correctly.")
+        msg_type = "success"
+        neg = ""
+
+    session["flashmessage"] = (f"alert alert-{msg_type}",
+        f"The word '{the_word}' is {neg}spelled correctly.")
+
+    # if the_word in trie:
+    #     session["flashmessage"] = ("alert alert-success",
+    #     f"The word '{the_word}' is spelled correctly.")
+    # else:
+    #     session["flashmessage"] = ("alert alert-danger",
+    #     f"The word '{the_word}' is not spelled correctly.")
 
     return redirect(url_for('check_word'))
 
