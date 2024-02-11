@@ -1,0 +1,32 @@
+{% include 'header.html' %}
+
+<div class="container text-center mt-5" role="main">
+<div class="page-header">
+    <h1>Prefix search</h1>
+</div>
+
+
+{% if flashmessage %}
+    <div class="{{ flashmessage.message_type }}"> {{ flashmessage.message }}</div>
+{% endif %}
+
+<form role="form" method="POST" action="{{ url_for('prefix_search_') }}">   
+    <div class="form-group">
+        <label for="word">Enter a prefix:</label>
+        <input id="word" type="text" name="word" minlength="1" placeholder="prefix">
+    </div>
+
+    <button type="submit" class="btn btn-info btn-lg">Search</button>
+</form>
+{% if prefix %}
+<ul>
+    {% for word in trie.prefix_search(prefix) %}
+
+    <li>{{ word[0] }}</li>
+
+    {% endfor %}
+</ul>
+{% endif %}
+
+</div>
+{% include 'footer.html' %}

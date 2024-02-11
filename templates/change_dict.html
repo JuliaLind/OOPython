@@ -1,0 +1,27 @@
+{% include 'header.html' %}
+
+<div class="container text-center mt-5" role="main">
+<div class="page-header">
+    <h1>Change dictionary</h1>
+</div>
+
+{% if flashmessage %}
+    <div class="{{ flashmessage.message_type }}"> {{ flashmessage.message }}</div>
+{% endif %}
+
+<p>Current filename is {{ session["filename"] }}</p>
+<form role="form" method="POST" action="{{ url_for('change_dictionary_') }}">   
+    <div class="form-group">
+        <label for="filename">Available files:</label>
+        <select id="filename" name="filename" required>
+            <option value="frequency.txt" {% if session["filename"] == "frequency.txt" %} selected="selected" {% endif %}>frequency.txt</option>
+            <option value="tiny_frequency.txt" {% if session["filename"] == "tiny_frequency.txt" %} selected="selected" {% endif %}>tiny_frequency.txt</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-info btn-lg">Change</button>
+
+
+</form>
+</div>
+{% include 'footer.html' %}
