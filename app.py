@@ -143,11 +143,14 @@ def prefix_search_():
 
     trie = recreateTrie()
 
+    msg_type = ""
+    msg = ""
+
     if not session["word"] or not trie.prefix_search(session["word"]):
-        session["flashmessage"] = ("alert alert-warning",
-        f"No words were found with prefix '{session['word']}'.")
-    else:
-        session["flashmessage"] = ("","")
+        msg_type = "alert alert-warning"
+        msg = f"No words were found with prefix '{session['word']}'." 
+
+    session["flashmessage"] = (msg_type, msg)
 
     return redirect(url_for('prefix_search'))
 
